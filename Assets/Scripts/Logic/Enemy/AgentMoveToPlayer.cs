@@ -8,8 +8,9 @@ namespace Logic.Enemy
 {
   public class AgentMoveToPlayer : Follow
   {
-    public NavMeshAgent Agent;
-    
+    [SerializeField] private NavMeshAgent agent;
+    [SerializeField] private EnemyDeath enemyDeath;
+
     private const float MinimalDistance = 1f;
 
     private IGameFactory _gameFactory;
@@ -24,20 +25,23 @@ namespace Logic.Enemy
 
     private void Update()
     {
-      if (_heroTransform && IsHeroNotReached() && _heroZoneCheck.CurrentZone != Zone.Base)
+      if (_heroTransform &&
+          IsHeroNotReached()
+          && _heroZoneCheck.CurrentZone != Zone.Base
+          && !enemyDeath.isDead)
       {
-        Agent.isStopped = false;
-        Agent.destination = _heroTransform.position;  
+        agent.isStopped = false;
+        agent.destination = _heroTransform.position;  
       }
       else
       {
-        Agent.isStopped = true;
+        agent.isStopped = true;
       }
     }
     
     private bool IsHeroNotReached()
     {
-      float sqrMagnitudeTo = Agent.transform.position.SqrMagnitudeTo(_heroTransform.position);
+      float sqrMagnitudeTo = agent.transform.position.SqrMagnitudeTo(_heroTransform.position);
       return sqrMagnitudeTo >= MinimalDistance;
     }
   }
